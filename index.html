@@ -1,1 +1,811 @@
-God.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Shalom · Command Center HQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;--bg2:#0f0f0f;--bg3:#161616;--bg4:#1e1e1e;
+  --card:#111111;--card2:#191919;--border:#232323;--border2:#2e2e2e;
+  --text:#f0ede6;--text2:#a8a49c;--text3:#585450;
+  --amber:#e8a030;--amber2:#c4831a;--amber-bg:#1e1400;
+  --teal:#1aaa6e;--teal-bg:#001a0e;
+  --red:#d94040;--red-bg:#1a0808;
+  --blue:#3a8fdd;--blue-bg:#051525;
+  --purple:#9070dd;--purple-bg:#0f0820;
+  --font-display:'Bebas Neue',sans-serif;
+  --font-mono:'Space Mono',monospace;
+  --font-body:'DM Sans',sans-serif;
+  --sidebar-w:230px;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px}
+
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border2)}
+.logo{padding:22px 18px 16px;border-bottom:1px solid var(--border)}
+.logo-name{font-family:var(--font-display);font-size:26px;letter-spacing:3px;line-height:1;color:var(--text)}
+.logo-sub{font-family:var(--font-mono);font-size:8px;color:var(--text3);letter-spacing:0.15em;text-transform:uppercase;margin-top:3px}
+.logo-date{font-family:var(--font-mono);font-size:8px;color:var(--amber);margin-top:5px}
+.nav-section{padding:14px 0 2px}
+.nav-label{font-family:var(--font-mono);font-size:7.5px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;padding:0 18px;margin-bottom:3px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:6px 18px;cursor:pointer;font-size:12px;color:var(--text2);transition:all 0.12s;position:relative;user-select:none}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--bg3);color:var(--amber)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--amber)}
+.nav-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.d-red{background:var(--red)}
+.d-amber{background:var(--amber)}
+.d-teal{background:var(--teal)}
+.d-blue{background:var(--blue)}
+.d-purple{background:var(--purple)}
+.d-gray{background:var(--text3)}
+.nav-badge{margin-left:auto;font-family:var(--font-mono);font-size:8px;padding:1px 5px;border-radius:2px}
+.nb-red{background:var(--red-bg);color:var(--red)}
+.nb-amber{background:var(--amber-bg);color:var(--amber)}
+.sidebar-footer{margin-top:auto;padding:14px 18px;border-top:1px solid var(--border)}
+.income-box{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:10px 12px}
+.income-title{font-family:var(--font-mono);font-size:7.5px;color:var(--text3);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px}
+.income-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.income-row:last-child{margin-bottom:0}
+.income-name{font-size:10px;color:var(--text2)}
+.income-val{font-family:var(--font-mono);font-size:9px}
+.iv-green{color:var(--teal)}
+.iv-amber{color:var(--amber)}
+.iv-gray{color:var(--text3)}
+
+/* ── MAIN ── */
+.main{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg)}
+.main::-webkit-scrollbar{width:4px}
+.main::-webkit-scrollbar-thumb{background:var(--border2)}
+.view{display:none;padding:32px 36px 60px;min-height:100%}
+.view.active{display:block}
+
+/* ── PAGE HEADER ── */
+.ph{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+.ph-title{font-family:var(--font-display);font-size:44px;letter-spacing:2px;line-height:1;color:var(--text)}
+.ph-title span{color:var(--amber)}
+.ph-sub{font-family:var(--font-mono);font-size:8px;color:var(--text3);letter-spacing:0.15em;text-transform:uppercase;margin-top:4px}
+.ph-right{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-align:right;line-height:1.6}
+
+/* ── SECTION ── */
+.sec{margin-bottom:28px}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sec-title{font-family:var(--font-mono);font-size:8.5px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);white-space:nowrap}
+.sec-line{flex:1;height:1px;background:var(--border)}
+
+/* ── STATS ROW ── */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:12px 14px}
+.stat-n{font-family:var(--font-display);font-size:28px;letter-spacing:1px;line-height:1}
+.sn-red{color:var(--red)}
+.sn-amber{color:var(--amber)}
+.sn-teal{color:var(--teal)}
+.sn-blue{color:var(--blue)}
+.sn-purple{color:var(--purple)}
+.stat-l{font-family:var(--font-mono);font-size:7.5px;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;margin-top:3px}
+
+/* ── URGENT BAND ── */
+.urgent-band{background:var(--red-bg);border:1px solid #2d0f0f;border-radius:8px;padding:14px 18px;margin-bottom:24px}
+.urgent-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.urgent-title{font-family:var(--font-mono);font-size:8px;color:var(--red);letter-spacing:0.2em;text-transform:uppercase}
+.blink{width:6px;height:6px;border-radius:50%;background:var(--red);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.15}}
+.urgent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.urgent-item{background:rgba(0,0,0,0.35);border:1px solid #2a1010;border-radius:5px;padding:9px 11px}
+.ui-title{font-size:11px;font-weight:500;color:var(--text);margin-bottom:2px}
+.ui-sub{font-size:10px;color:var(--text3);line-height:1.4}
+.ui-due{font-family:var(--font-mono);font-size:8.5px;color:var(--red);margin-top:4px}
+
+/* ── PROJECT CARDS ── */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.cards-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:15px;cursor:pointer;transition:border-color 0.15s,background 0.15s;position:relative;overflow:hidden}
+.pcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.pcard:hover{border-color:var(--border2);background:var(--card2)}
+.pc-fire::before{background:var(--red)}
+.pc-high::before{background:var(--amber)}
+.pc-mid::before{background:var(--teal)}
+.pc-low::before{background:var(--blue)}
+.pc-bg::before{background:var(--purple)}
+.pc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px}
+.pc-title{font-family:var(--font-display);font-size:17px;letter-spacing:1px;line-height:1.1;color:var(--text)}
+.pill{font-family:var(--font-mono);font-size:7.5px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;border-radius:2px;flex-shrink:0;white-space:nowrap}
+.pp-post{background:#0d1f0d;color:var(--teal)}
+.pp-dev{background:var(--amber-bg);color:var(--amber)}
+.pp-active{background:var(--blue-bg);color:var(--blue)}
+.pp-pre{background:var(--purple-bg);color:var(--purple)}
+.pp-fire{background:var(--red-bg);color:var(--red)}
+.pp-bg{background:#141414;color:var(--text3)}
+.pc-desc{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:9px}
+.dl-row{display:flex;align-items:center;gap:5px;margin-bottom:5px}
+.dl-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.dl-red{background:var(--red)}
+.dl-amber{background:var(--amber)}
+.dl-teal{background:var(--teal)}
+.dl-text{font-family:var(--font-mono);font-size:8.5px;color:var(--text3)}
+.dl-val{color:var(--amber)}
+.dl-val-red{color:var(--red)}
+.dl-val-teal{color:var(--teal)}
+
+/* ── TODO LIST ── */
+.todo-list{list-style:none;margin-top:8px}
+.todo-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-top:1px solid #181818;cursor:pointer;user-select:none}
+.todo-item:first-child{border-top:none}
+.chk{width:13px;height:13px;border:1px solid var(--border2);border-radius:2px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.chk.done{background:var(--teal);border-color:var(--teal)}
+.chk.done::after{content:'✓';font-size:8px;color:#000;font-weight:700}
+.todo-text{font-size:11px;color:var(--text2);line-height:1.4;flex:1}
+.todo-text.done{text-decoration:line-through;color:var(--text3)}
+.tag{font-family:var(--font-mono);font-size:7.5px;padding:1px 5px;border-radius:2px;flex-shrink:0}
+.tag-now{background:var(--red-bg);color:var(--red)}
+.tag-soon{background:var(--amber-bg);color:var(--amber)}
+.tag-week{background:var(--teal-bg);color:var(--teal)}
+
+/* ── DETAIL VIEWS ── */
+.detail-section{margin-bottom:22px}
+.ds-title{font-family:var(--font-mono);font-size:8.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.ds-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.note{background:var(--amber-bg);border:1px solid #2d1e00;border-radius:5px;padding:10px 13px;font-size:11px;color:var(--amber);line-height:1.55;margin-bottom:18px;font-style:italic}
+.note-teal{background:var(--teal-bg);border-color:#003020;color:var(--teal)}
+
+/* ── PIPELINE CARDS ── */
+.pipe-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:13px 15px;margin-bottom:8px}
+.pipe-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.pipe-title{font-size:12px;font-weight:500;color:var(--text)}
+
+/* ── MEETINGS ── */
+.meeting-card{background:var(--card);border:1px solid var(--border);border-left:2px solid var(--blue);border-radius:6px;padding:14px 16px;margin-bottom:10px}
+.mc-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.mc-role{font-size:10px;color:var(--text3);margin-bottom:8px}
+.mc-purpose{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:6px}
+.mc-status{font-family:var(--font-mono);font-size:8.5px}
+.ms-set{color:var(--teal)}
+.ms-urgent{color:var(--red)}
+
+/* ── CALENDAR ── */
+.cal-item{display:grid;grid-template-columns:56px 1fr;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:11px 14px;margin-bottom:8px;align-items:start}
+.cal-date{font-family:var(--font-display);font-size:18px;color:var(--amber);letter-spacing:1px;line-height:1.1;text-align:center}
+.cal-month{font-family:var(--font-mono);font-size:7.5px;color:var(--text3);text-align:center;text-transform:uppercase}
+.cal-title{font-size:12px;font-weight:500;color:var(--text);margin-bottom:2px}
+.cal-sub{font-size:10.5px;color:var(--text2);line-height:1.4}
+.cal-tag{display:inline-block;font-family:var(--font-mono);font-size:7.5px;padding:2px 5px;border-radius:2px;margin-top:5px}
+.ct-film{background:var(--red-bg);color:var(--red)}
+.ct-work{background:var(--amber-bg);color:var(--amber)}
+.ct-travel{background:var(--blue-bg);color:var(--blue)}
+.ct-personal{background:var(--teal-bg);color:var(--teal)}
+
+/* ── BACK BTN ── */
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:8.5px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;margin-bottom:20px;transition:color 0.12s}
+.back-btn:hover{color:var(--amber)}
+
+/* ── MOBILE ── */
+.mob-header{display:none;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.mob-logo{font-family:var(--font-display);font-size:20px;letter-spacing:2px;color:var(--text)}
+.mob-menu{width:28px;height:28px;display:flex;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;padding:4px}
+.mob-menu span{display:block;height:1.5px;background:var(--text2);transition:all 0.2s}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:199}
+
+@media(max-width:768px){
+  html,body{overflow:auto}
+  .app{flex-direction:column;height:auto}
+  .sidebar{position:fixed;left:-100%;top:0;bottom:0;z-index:200;transition:left 0.25s;width:260px}
+  .sidebar.open{left:0}
+  .sidebar-overlay.open{display:block}
+  .main{overflow:visible;flex:1}
+  .mob-header{display:flex}
+  .view{padding:20px 18px 60px}
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .cards{grid-template-columns:1fr}
+  .cards-2{grid-template-columns:1fr}
+  .urgent-grid{grid-template-columns:1fr 1fr}
+  .ph-title{font-size:32px}
+}
+@media(max-width:480px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .urgent-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="mob-header">
+  <div class="mob-logo">SHALOM</div>
+  <div class="mob-menu" onclick="toggleSidebar()"><span></span><span></span><span></span></div>
+</div>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="app">
+<nav class="sidebar" id="sidebar">
+  <div class="logo">
+    <div class="logo-name">SHALOM</div>
+    <div class="logo-sub">Command Center · HQ</div>
+    <div class="logo-date" id="sideDate"></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item active" onclick="show('overview',this)"><span class="nav-dot d-red"></span>Dashboard</div>
+    <div class="nav-item" onclick="show('urgent',this)"><span class="nav-dot d-red"></span>Urgent Now <span class="nav-badge nb-red">6</span></div>
+    <div class="nav-item" onclick="show('calendar',this)"><span class="nav-dot d-amber"></span>Calendar</div>
+    <div class="nav-item" onclick="show('meetings',this)"><span class="nav-dot d-blue"></span>Meetings <span class="nav-badge nb-amber">2</span></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">The Slate · Film</div>
+    <div class="nav-item" onclick="show('sandwich',this)"><span class="nav-dot d-red"></span>SANDWICH</div>
+    <div class="nav-item" onclick="show('rift',this)"><span class="nav-dot d-red"></span>RIFT Feature</div>
+    <div class="nav-item" onclick="show('olatokunbo',this)"><span class="nav-dot d-amber"></span>OLATOKUNBO</div>
+    <div class="nav-item" onclick="show('ghost',this)"><span class="nav-dot d-teal"></span>I Am Not A Ghost</div>
+    <div class="nav-item" onclick="show('audition',this)"><span class="nav-dot d-blue"></span>Audition Film</div>
+    <div class="nav-item" onclick="show('backlog',this)"><span class="nav-dot d-gray"></span>Edit Backlog</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Business</div>
+    <div class="nav-item" onclick="show('livewell',this)"><span class="nav-dot d-teal"></span>LiveWell Homes</div>
+    <div class="nav-item" onclick="show('menari',this)"><span class="nav-dot d-amber"></span>Journal Menari</div>
+    <div class="nav-item" onclick="show('omnicom',this)"><span class="nav-dot d-amber"></span>Omnicom Offer</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Content & Brand</div>
+    <div class="nav-item" onclick="show('brand',this)"><span class="nav-dot d-purple"></span>Personal Brand</div>
+    <div class="nav-item" onclick="show('taiwan',this)"><span class="nav-dot d-blue"></span>Taiwan Footage</div>
+    <div class="nav-item" onclick="show('vertical',this)"><span class="nav-dot d-gray"></span>Vertical Series</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Personal</div>
+    <div class="nav-item" onclick="show('personal',this)"><span class="nav-dot d-gray"></span>Personal & Ken</div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="income-box">
+      <div class="income-title">Income Tracking</div>
+      <div class="income-row"><span class="income-name">House — Doorhosts</span><span class="income-val iv-green">$2,900/mo</span></div>
+      <div class="income-row"><span class="income-name">LiveWell Portfolio</span><span class="income-val iv-green">~$8K/mo</span></div>
+      <div class="income-row"><span class="income-name">Omnicom Salary</span><span class="income-val iv-amber">PENDING</span></div>
+      <div class="income-row"><span class="income-name">ND Show Side Work</span><span class="income-val iv-amber">CALL TODAY</span></div>
+      <div class="income-row"><span class="income-name">Journal Menari</span><span class="income-val iv-gray">BUILDING</span></div>
+    </div>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- OVERVIEW -->
+<div class="view active" id="v-overview">
+  <div class="ph">
+    <div><div class="ph-title">COMMAND <span>CENTER</span></div><div class="ph-sub">Shalom · All Ventures · April 2026</div></div>
+    <div class="ph-right" id="mainDate"></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-n sn-red">3</div><div class="stat-l">Fire Deadlines</div></div>
+    <div class="stat"><div class="stat-n sn-amber">7</div><div class="stat-l">Active Projects</div></div>
+    <div class="stat"><div class="stat-n sn-teal">4</div><div class="stat-l">In Post / Edit</div></div>
+    <div class="stat"><div class="stat-n sn-blue">2</div><div class="stat-l">Pending Offers</div></div>
+    <div class="stat"><div class="stat-n sn-purple">12</div><div class="stat-l">Open Actions</div></div>
+  </div>
+
+  <div class="urgent-band">
+    <div class="urgent-head"><div class="blink"></div><div class="urgent-title">Needs Attention This Week</div></div>
+    <div class="urgent-grid">
+      <div class="urgent-item"><div class="ui-title">SANDWICH Cut</div><div class="ui-sub">Finish laid-out edit</div><div class="ui-due">DUE SUN APR 19</div></div>
+      <div class="urgent-item"><div class="ui-title">Call ND</div><div class="ui-sub">Hours + side editing cash</div><div class="ui-due">TODAY / APR 17</div></div>
+      <div class="urgent-item"><div class="ui-title">Cleaner — House</div><div class="ui-sub">Apr 19 after 11am → tenant Apr 20</div><div class="ui-due">CRITICAL APR 19</div></div>
+      <div class="urgent-item"><div class="ui-title">Omnicom Offer</div><div class="ui-sub">Written offer coming this week</div><div class="ui-due">THIS WEEK</div></div>
+      <div class="urgent-item"><div class="ui-title">Jordan Offer Letter</div><div class="ui-sub">Draft before Apr 21 start</div><div class="ui-due">APR 18–19</div></div>
+      <div class="urgent-item"><div class="ui-title">Tax Follow-Up</div><div class="ui-sub">Docs sent Apr 15 — confirm receipt</div><div class="ui-due">THIS WEEK</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div class="sec-title">Priority Stack · Fire</div><div class="sec-line"></div></div>
+    <div class="cards">
+      <div class="pcard pc-fire" onclick="show('sandwich',null)">
+        <div class="pc-head"><div class="pc-title">SANDWICH</div><span class="pill pp-post">Post</span></div>
+        <div class="pc-desc">Short film in post. HollyShorts submission May 5. Lock edit → color → sound → score (Analia).</div>
+        <div class="dl-row"><div class="dl-dot dl-red"></div><div class="dl-text">Edit laid out: <span class="dl-val-red">Apr 19</span></div></div>
+        <div class="dl-row"><div class="dl-dot dl-amber"></div><div class="dl-text">HollyShorts submit: <span class="dl-val">May 5</span></div></div>
+      </div>
+      <div class="pcard pc-fire" onclick="show('rift',null)">
+        <div class="pc-head"><div class="pc-title">RIFT</div><span class="pill pp-dev">Dev</span></div>
+        <div class="pc-desc">Feature film — Palm Trees program. Nigeria setting. Treatment + first 15 pages.</div>
+        <div class="dl-row"><div class="dl-dot dl-red"></div><div class="dl-text">Palm Trees deadline: <span class="dl-val-red">Jun 1</span></div></div>
+        <div class="dl-row"><div class="dl-dot dl-amber"></div><div class="dl-text">Treatment draft: <span class="dl-val">May 10</span></div></div>
+      </div>
+      <div class="pcard pc-fire" onclick="show('olatokunbo',null)">
+        <div class="pc-head"><div class="pc-title">OLATOKUNBO</div><span class="pill pp-pre">Pre-Pro</span></div>
+        <div class="pc-desc">Short film. Nigeria shoot. $10–15K budget. Jade EP. Amanda co-producer. Sundance circuit.</div>
+        <div class="dl-row"><div class="dl-dot dl-red"></div><div class="dl-text">Shoot window: <span class="dl-val-red">Jun–Jul</span></div></div>
+        <div class="dl-row"><div class="dl-dot dl-amber"></div><div class="dl-text">Financing locked: <span class="dl-val">May 20</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div class="sec-title">Priority Stack · High</div><div class="sec-line"></div></div>
+    <div class="cards">
+      <div class="pcard pc-high" onclick="show('ghost',null)">
+        <div class="pc-head"><div class="pc-title">I AM NOT A GHOST</div><span class="pill pp-dev">Dev + Shoot</span></div>
+        <div class="pc-desc">Excerpt scene with Azmira (DP/FX3) + Charlie (lighting). Post online May. Content strategy play.</div>
+        <div class="dl-row"><div class="dl-dot dl-teal"></div><div class="dl-text">Post online: <span class="dl-val-teal">May</span></div></div>
+      </div>
+      <div class="pcard pc-high" onclick="show('livewell',null)">
+        <div class="pc-head"><div class="pc-title">LIVEWELL</div><span class="pill pp-active">Active</span></div>
+        <div class="pc-desc">Jordan hire. Tenant Apr 20. Subsidy ends Jun 1. Operations coordinator onboarding.</div>
+        <div class="dl-row"><div class="dl-dot dl-red"></div><div class="dl-text">Cleaner: <span class="dl-val-red">Apr 19</span></div></div>
+        <div class="dl-row"><div class="dl-dot dl-amber"></div><div class="dl-text">Jordan start: <span class="dl-val">Apr 21 or May 1</span></div></div>
+      </div>
+      <div class="pcard pc-high" onclick="show('taiwan',null)">
+        <div class="pc-head"><div class="pc-title">TAIWAN FOOTAGE</div><span class="pill pp-post">Post</span></div>
+        <div class="pc-desc">4–5 social clips of Ugo first. Then longer mini-doc. NYC Met Gala week coming soon.</div>
+        <div class="dl-row"><div class="dl-dot dl-teal"></div><div class="dl-text">Social clips: <span class="dl-val-teal">May</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div class="sec-title">Priority Stack · Building</div><div class="sec-line"></div></div>
+    <div class="cards">
+      <div class="pcard pc-mid" onclick="show('menari',null)">
+        <div class="pc-head"><div class="pc-title">JOURNAL MENARI</div><span class="pill pp-dev">Building</span></div>
+        <div class="pc-desc">Jewelry brand. Stevie Wonder piece. Seed influencers. Cash flow + credibility play.</div>
+      </div>
+      <div class="pcard pc-mid" onclick="show('audition',null)">
+        <div class="pc-head"><div class="pc-title">AUDITION FILM</div><span class="pill pp-dev">Concept</span></div>
+        <div class="pc-desc">Nig-Am actor auditions to play estranged father. Book + feature + series IP potential.</div>
+      </div>
+      <div class="pcard pc-low" onclick="show('vertical',null)">
+        <div class="pc-head"><div class="pc-title">VERTICAL SERIES</div><span class="pill pp-bg">Side</span></div>
+        <div class="pc-desc">Script-stage sale with Decka. Amanda / Mansa may acquire. KDOW Lil Docs pitch ready.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- URGENT NOW -->
+<div class="view" id="v-urgent">
+  <div class="ph"><div><div class="ph-title">URGENT <span>NOW</span></div><div class="ph-sub">Immediate action required · Apr 16</div></div></div>
+  <div class="pipe-card pc-fire" style="border-left:2px solid var(--red);border-radius:6px">
+    <div class="pipe-head"><div class="pipe-title">SANDWICH EDIT</div><span class="pill pp-fire">Due Apr 19</span></div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Finish laid-out assembly cut</div><span class="tag tag-now">TONIGHT</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Review cut with fresh eyes — note changes</div><span class="tag tag-now">APR 19</span></li>
+    </ul>
+  </div>
+  <div class="pipe-card" style="border-left:2px solid var(--red);border-radius:6px;margin-top:10px">
+    <div class="pipe-head"><div class="pipe-title">CALL ND — SHOW HOURS + SIDE CASH</div><span class="pill pp-fire">Today / Tomorrow</span></div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Call ND today (Apr 16) or tomorrow (Apr 17) — hours on show + editing side work</div><span class="tag tag-now">TODAY</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Confirm days per week available</div><span class="tag tag-now">APR 17</span></li>
+    </ul>
+  </div>
+  <div class="pipe-card" style="border-left:2px solid var(--red);border-radius:6px;margin-top:10px">
+    <div class="pipe-head"><div class="pipe-title">CLEANER — HOUSE TURNOVER</div><span class="pill pp-fire">Critical Apr 19</span></div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Book cleaner NOW for Apr 19 afternoon (current guest out after 11am)</div><span class="tag tag-now">TODAY</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Confirm Doorhosts move-in details for Apr 20</div><span class="tag tag-soon">APR 18</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Confirm $2,900/mo rate locked with Doorhosts</div><span class="tag tag-soon">APR 18</span></li>
+    </ul>
+  </div>
+  <div class="pipe-card" style="border-left:2px solid var(--amber);border-radius:6px;margin-top:10px">
+    <div class="pipe-head"><div class="pipe-title">OMNICOM OFFER</div><span class="pill pp-dev">This Week</span></div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk done"></div><div class="todo-text done">Confirmed still interested — Apr 16 ✓</div></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Watch inbox for written offer</div><span class="tag tag-now">THIS WEEK</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Review terms — salary, title, start date</div><span class="tag tag-soon">ON RECEIPT</span></li>
+    </ul>
+  </div>
+  <div class="pipe-card" style="border-left:2px solid var(--amber);border-radius:6px;margin-top:10px">
+    <div class="pipe-head"><div class="pipe-title">JORDAN OFFER LETTER</div><span class="pill pp-dev">Before Apr 21</span></div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Draft offer letter (title, rate, hours, start)</div><span class="tag tag-now">APR 18</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Write commandments doc — priorities + expectations</div><span class="tag tag-now">APR 18</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Confirm start date: Apr 21 or May 1</div><span class="tag tag-soon">APR 19</span></li>
+    </ul>
+  </div>
+  <div class="pipe-card" style="border-left:2px solid var(--teal);border-radius:6px;margin-top:10px">
+    <div class="pipe-head"><div class="pipe-title">TAXES</div><span class="pill pp-active">Follow Up</span></div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk done"></div><div class="todo-text done">Sent tax docs to tax person — Apr 15 ✓</div></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Follow up — confirm received + get ETA</div><span class="tag tag-soon">APR 17–18</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- SANDWICH -->
+<div class="view" id="v-sandwich">
+  <div class="ph"><div><div class="ph-title">SAND<span>WICH</span></div><div class="ph-sub">Short Film · Post Production</div></div></div>
+  <div class="note">After HollyShorts submission (May 5), tell Ugo to connect you to his contact who runs HollyShorts. Premiere ~August LA → post digitally after.</div>
+  <div class="detail-section"><div class="ds-title">Edit</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Finish laid-out assembly cut</div><span class="tag tag-now">APR 19</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Lock picture cut</div><span class="tag tag-soon">APR 26</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Export for colorist and sound mixer</div><span class="tag tag-soon">APR 27</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Score — Analia (Argentinian Composer)</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Send Analia near-locked cut</div><span class="tag tag-soon">APR 27</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Review first score pass</div><span class="tag tag-week">MAY 3</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Final score delivery</div><span class="tag tag-week">MAY 4</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Color</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Lock colorist — confirm availability Apr 27+</div><span class="tag tag-soon">APR 20</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Color session complete</div><span class="tag tag-week">MAY 2</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Sound Mix</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Lock sound mixer — confirm dates</div><span class="tag tag-soon">APR 20</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Sound mix complete</div><span class="tag tag-week">MAY 3</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Submit</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Final master export</div><span class="tag tag-week">MAY 4</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Submit to HollyShorts</div><span class="tag tag-week">MAY 5</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Tell Ugo → connect to HollyShorts contact</div><span class="tag tag-week">AFTER SUBMIT</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- RIFT -->
+<div class="view" id="v-rift">
+  <div class="ph"><div><div class="ph-title">RIFT <span>FEATURE</span></div><div class="ph-sub">Feature Film · Palm Trees · Jun 1</div></div></div>
+  <div class="note">Reconfigure to Nigeria setting (can shoot GA for tax credits). Requires: full treatment + first 15 pages. Subgoal: book outline alongside. Backup if rejected: FilmHedge financing stack.</div>
+  <div class="detail-section"><div class="ds-title">Concept Reconfiguration</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Nigeria setting — worldbuild key locations + cultural stakes</div><span class="tag tag-soon">APR 25</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Lock core concept and central conflict</div><span class="tag tag-soon">APR 25</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Character arcs confirmed — Neyara, Elo, Mateo</div><span class="tag tag-soon">APR 30</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Treatment</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Write full treatment (5–10 pages)</div><span class="tag tag-week">MAY 10</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Revise — tighten voice + hook</div><span class="tag tag-week">MAY 18</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">First 15 Pages</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Write pages 1–15 — strong opening sequence</div><span class="tag tag-week">MAY 25</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Polish and final review</div><span class="tag tag-week">MAY 29</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Submit to Palm Trees</div><span class="tag tag-week">JUN 1</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Book Outline (Subgoal)</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Draft book outline — chapter structure + arc</div><span class="tag tag-week">MAY 15</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- OLATOKUNBO -->
+<div class="view" id="v-olatokunbo">
+  <div class="ph"><div><div class="ph-title">OLATO<span>KUNBO</span></div><div class="ph-sub">Short Film · Nigeria · Sundance Circuit</div></div></div>
+  <div class="note">Budget: $10K min, $15K ideal. Shoot Jun–Jul. Jade Osiberu as EP. Amanda as co-producer. Long festival run — prestige play. Don't rush this one.</div>
+  <div class="detail-section"><div class="ds-title">Financing</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Finalize budget — locked $10K or $15K version</div><span class="tag tag-soon">MAY 1</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Identify financing path (Omnicom salary, investors, grants)</div><span class="tag tag-week">MAY 10</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Lock financing</div><span class="tag tag-week">MAY 20</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Attachments</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Reach out to Jade Osiberu — EP conversation</div><span class="tag tag-soon">MAY 1</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Bring Amanda in — co-producer conversation</div><span class="tag tag-soon">MAY 5</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Lock Nigeria crew and location scout</div><span class="tag tag-week">MAY 25</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- GHOST -->
+<div class="view" id="v-ghost">
+  <div class="ph"><div><div class="ph-title">I AM NOT <span>A GHOST</span></div><div class="ph-sub">Formerly Reckless · Excerpt Online · May</div></div></div>
+  <div class="note">One-take scene. New actress for KEN role. Azmira DP (FX3, free). Charlie lighting. Post in May. This is part of the ongoing content strategy — high quality work online while building major milestones. Full script is lower priority.</div>
+  <div class="detail-section"><div class="ds-title">Excerpt Shoot</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Find and cast actress for KEN role</div><span class="tag tag-soon">APR 25</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Rewrite excerpt scene from new story</div><span class="tag tag-soon">APR 25</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Confirm date with Azmira + Charlie</div><span class="tag tag-soon">APR 25</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Shoot one-take excerpt scene</div><span class="tag tag-week">APR–MAY</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Edit — cinematic, high level</div><span class="tag tag-week">MAY</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Post online</div><span class="tag tag-week">MAY</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Full Script (Lower Priority)</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Continue rewriting full story — after SANDWICH + RIFT delivered</div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- AUDITION FILM -->
+<div class="view" id="v-audition">
+  <div class="ph"><div><div class="ph-title">AUDITION <span>FILM</span></div><div class="ph-sub">Untitled · Book + Feature + Series IP</div></div></div>
+  <div class="note">Nigerian-American actor auditions for a role — discovers he's playing his estranged father. A friend sees series potential. IP with book, feature, and series potential. Develop after RIFT.</div>
+  <div class="detail-section"><div class="ds-title">Development</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Write logline + 1-page concept</div><span class="tag tag-week">AFTER RIFT</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Map out which format comes first — book, short, or feature</div><span class="tag tag-week">AFTER RIFT</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- BACKLOG -->
+<div class="view" id="v-backlog">
+  <div class="ph"><div><div class="ph-title">EDIT <span>BACKLOG</span></div><div class="ph-sub">Shot But Unedited</div></div></div>
+  <div class="detail-section"><div class="ds-title">Truitt City (Myles & Damii)</div>
+    <p style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5">Short film virtually directed. Stars Damii and Myles Truitt. Good calling card — do not let this rot on the drive.</p>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Pull footage — assess what's there</div><span class="tag tag-week">MAY</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Full edit pass</div><span class="tag tag-week">MAY–JUN</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Echo</div>
+    <p style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5">Digital short — shot, never edited. Schedule after SANDWICH is delivered.</p>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Pull and assess footage — after SANDWICH</div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- LIVEWELL -->
+<div class="view" id="v-livewell">
+  <div class="ph"><div><div class="ph-title">LIVE<span>WELL</span></div><div class="ph-sub">Community Homes · ~30 Rooms · Atlanta</div></div></div>
+  <div class="note">Doorhosts tenant moves in Apr 20 at $2,900/mo. Subsidy ends Jun 1 — rate drops enough to cash flow positive after. Jordan is your operations coordinator — she manages the day-to-day so you don't have to.</div>
+  <div class="detail-section"><div class="ds-title">House Turnover — Critical</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Book cleaner — Apr 19 afternoon after 11am</div><span class="tag tag-now">DO TODAY</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Confirm Doorhosts move-in details for Apr 20</div><span class="tag tag-soon">APR 18</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Confirm $2,900/mo rate locked</div><span class="tag tag-soon">APR 18</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Jordan — Ops Coordinator</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Draft offer letter</div><span class="tag tag-now">APR 18</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Write commandments / expectations doc</div><span class="tag tag-now">APR 18</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Send offer — confirm start date Apr 21 or May 1</div><span class="tag tag-soon">APR 19</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Brief Jordan on properties, tenant comms, site visits</div><span class="tag tag-week">WEEK 1</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Direct Jordan on social strategy — IG, Facebook, LinkedIn</div><span class="tag tag-week">WEEK 1</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Subsidy Transition — Jun 1</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Confirm post-subsidy cash flow math</div><span class="tag tag-week">MAY 15</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Ensure no vacancy gap around Jun 1</div><span class="tag tag-week">MAY 15</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- OMNICOM -->
+<div class="view" id="v-omnicom">
+  <div class="ph"><div><div class="ph-title">OMNI<span>COM</span></div><div class="ph-sub">Creo · Creator Partnerships Manager</div></div></div>
+  <div class="note">Written offer confirmed coming this week (Apr 16). This income funds Journal Menari, travel, and OLATOKUNBO financing. Move fast when it arrives.</div>
+  <ul class="todo-list" style="margin-top:0">
+    <li class="todo-item" onclick="chk(this)"><div class="chk done"></div><div class="todo-text done">Confirmed still interested — Apr 16 ✓</div></li>
+    <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Watch inbox for written offer</div><span class="tag tag-now">THIS WEEK</span></li>
+    <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Review terms — salary, title, start date</div><span class="tag tag-soon">ON RECEIPT</span></li>
+    <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Accept and confirm start date</div><span class="tag tag-soon">THIS WEEK</span></li>
+  </ul>
+</div>
+
+<!-- JOURNAL MENARI -->
+<div class="view" id="v-menari">
+  <div class="ph"><div><div class="ph-title">JOURNAL <span>MENARI</span></div><div class="ph-sub">Jewelry Brand · Building</div></div></div>
+  <div class="note">Cash flow play + brand credibility. Stevie Wonder wants a piece. Seed influencers with tested designs to build demand and company credibility simultaneously.</div>
+  <div class="detail-section"><div class="ds-title">Production</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Finalize 3–5 tested designs</div><span class="tag tag-week">MAY</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Produce seeding pieces for influencers + tastemakers</div><span class="tag tag-week">MAY–JUN</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Stevie Wonder piece — begin design process</div><span class="tag tag-week">MAY</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Ken Birthday Chain (Personal)</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Get $200 to 3D designer — once Omnicom income starts</div><span class="tag tag-soon">ASAP AFTER OMNICOM</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Approve 3D design</div></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Cast and assemble chain</div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- BRAND -->
+<div class="view" id="v-brand">
+  <div class="ph"><div><div class="ph-title">PERSONAL <span>BRAND</span></div><div class="ph-sub">Shalom · Mononym · Content Online</div></div></div>
+  <div class="note">While building major milestones — consistently put high-quality work online. Short scenes, mini films, BTS. Get your face, work, and taste out there. Every piece posted is a brick in the platform.</div>
+  <div class="detail-section"><div class="ds-title">Online Content Pipeline</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">I Am Not A Ghost excerpt — post May</div><span class="tag tag-week">MAY</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Taiwan social clips (4–5) — post May</div><span class="tag tag-week">MAY</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">NYC Met Gala week content with Ugo — shoot + post</div><span class="tag tag-week">MAY</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">SANDWICH — digital release after HollyShorts run</div><span class="tag tag-week">AUG+</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Platform & Presence</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">IMDb — confirm mononym "Shalom" live</div><span class="tag tag-soon">APR 20</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">New headshots</div><span class="tag tag-week">SUMMER</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Acting classes — when bandwidth opens</div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- TAIWAN -->
+<div class="view" id="v-taiwan">
+  <div class="ph"><div><div class="ph-title">TAIWAN <span>FOOTAGE</span></div><div class="ph-sub">Ugo Mozie · Social + Mini-Doc</div></div></div>
+  <div class="note">Two deliverables: (1) 4–5 social clips at different sections of the trip — post ASAP. (2) Longer-form mini-doc after. NYC Met Gala week coming — another content shoot with Ugo.</div>
+  <div class="detail-section"><div class="ds-title">Social Clips — Priority 1</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Cull footage — identify best moments per section</div><span class="tag tag-soon">APR 25</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Edit 4–5 clips — cinematic, not vlog</div><span class="tag tag-week">MAY 5</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Post all clips</div><span class="tag tag-week">MAY</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Mini-Doc — Priority 2</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Structure mini-doc — arc + narrative spine</div><span class="tag tag-week">MAY</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Edit longer-form doc</div><span class="tag tag-week">MAY–JUN</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">NYC — Met Gala Week with Ugo</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Confirm NYC dates — lock travel</div><span class="tag tag-soon">APR 20</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Shot list + content plan before trip</div><span class="tag tag-week">BEFORE TRIP</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- VERTICAL SERIES -->
+<div class="view" id="v-vertical">
+  <div class="ph"><div><div class="ph-title">VERTICAL <span>SERIES</span></div><div class="ph-sub">D//S Studios · Script-Stage Sale</div></div></div>
+  <div class="note">Develop with Decka. Sell at script stage — license or full sale. Amanda flagged Mansa may acquire. KDOW Lil Docs pitch is built and ready to move. Semi-background for now.</div>
+  <ul class="todo-list" style="margin-top:0">
+    <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Identify 3 platforms to pitch Lil Docs</div><span class="tag tag-week">MAY</span></li>
+    <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Loop Amanda — ask about Mansa acquisition path</div><span class="tag tag-week">MAY</span></li>
+  </ul>
+</div>
+
+<!-- MEETINGS -->
+<div class="view" id="v-meetings">
+  <div class="ph"><div><div class="ph-title">MEET<span>INGS</span></div><div class="ph-sub">Set, Upcoming, and To Schedule</div></div></div>
+  <div class="meeting-card">
+    <div class="mc-name">Alexis Rivera</div>
+    <div class="mc-role">Director signed to Macro · Short Vertical Series</div>
+    <div class="mc-purpose">Directed a dope short vertical series. Meeting to connect, learn her approach, and get intel on the vertical space D//S Studios is building toward.</div>
+    <div class="mc-status ms-set">SET — date TBD · Notes: —</div>
+  </div>
+  <div class="meeting-card">
+    <div class="mc-name">ND</div>
+    <div class="mc-role">The Family Business / Black Hamptons</div>
+    <div class="mc-purpose">Clarify hours on the show + Black Hamptons promo. Check if available for editing side work a few days a week for extra cash flow.</div>
+    <div class="mc-status ms-urgent">CALL TODAY (Apr 16) or Apr 17</div>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div class="view" id="v-calendar">
+  <div class="ph"><div><div class="ph-title">CALENDAR <span>& EVENTS</span></div><div class="ph-sub">Key Dates Through 2026</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">16–17</div><div class="cal-month">APR</div></div><div><div class="cal-title">Call ND — show hours + side editing cash</div><div class="cal-sub">Critical for cash flow. Do today or tomorrow.</div><div class="cal-tag ct-film">Urgent</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">18–19</div><div class="cal-month">APR</div></div><div><div class="cal-title">Draft Jordan offer letter + commandments doc</div><div class="cal-sub">Before her proposed Apr 21 start date</div><div class="cal-tag ct-work">LiveWell</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">19</div><div class="cal-month">APR</div></div><div><div class="cal-title">SANDWICH cut laid out + Cleaner in house after 11am</div><div class="cal-sub">Current guest checks out. Tight window — book cleaner today.</div><div class="cal-tag ct-film">Film + Home</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">20</div><div class="cal-month">APR</div></div><div><div class="cal-title">New tenant moves in — Doorhosts</div><div class="cal-sub">Insurance case. $2,900/mo rate.</div><div class="cal-tag ct-work">LiveWell</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">21</div><div class="cal-month">APR</div></div><div><div class="cal-title">Jordan possible start date</div><div class="cal-sub">Or May 1 — confirm with her this week</div><div class="cal-tag ct-work">LiveWell</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">5</div><div class="cal-month">MAY</div></div><div><div class="cal-title">SANDWICH — HollyShorts submission deadline</div><div class="cal-sub">Everything post must be locked by May 4</div><div class="cal-tag ct-film">Film</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">TBD</div><div class="cal-month">MAY</div></div><div><div class="cal-title">NYC — Met Gala Week with Ugo</div><div class="cal-sub">Mini-doc content shoot. Confirm dates ASAP.</div><div class="cal-tag ct-travel">Travel</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">1</div><div class="cal-month">JUN</div></div><div><div class="cal-title">Palm Trees deadline — RIFT treatment + 15 pages</div><div class="cal-sub">Also: house subsidy ends today</div><div class="cal-tag ct-film">Film + Home</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">4–7</div><div class="cal-month">JUN</div></div><div><div class="cal-title">Olvin bachelor party + wedding — NOLA</div><div class="cal-sub">Best friend from college. May overlap with Tribeca.</div><div class="cal-tag ct-personal">Personal</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">5</div><div class="cal-month">JUN</div></div><div><div class="cal-title">Tribeca — Elisee's film premiere</div><div class="cal-sub">Overlaps with NOLA — manage both carefully</div><div class="cal-tag ct-travel">Film + Travel</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">20</div><div class="cal-month">JUN</div></div><div><div class="cal-title">Dice's wedding — LA</div><div class="cal-sub">Doing video. Be prepped with gear + shot plan.</div><div class="cal-tag ct-work">Video Work</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">Jun–Jul</div><div class="cal-month">2026</div></div><div><div class="cal-title">OLATOKUNBO — Nigeria shoot window</div><div class="cal-sub">Must shoot to make Sundance submission timeline</div><div class="cal-tag ct-film">Film</div></div></div>
+  <div class="cal-item"><div><div class="cal-date">~Aug</div><div class="cal-month">2026</div></div><div><div class="cal-title">SANDWICH — HollyShorts premiere, LA</div><div class="cal-sub">If accepted. Digital release after festival run.</div><div class="cal-tag ct-personal">Festival</div></div></div>
+</div>
+
+<!-- PERSONAL -->
+<div class="view" id="v-personal">
+  <div class="ph"><div><div class="ph-title">PERSONAL <span>& KEN</span></div><div class="ph-sub">Life Admin · Relationships</div></div></div>
+  <div class="detail-section"><div class="ds-title">Ken</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Birthday chain — get $200 to 3D designer once Omnicom income starts</div><span class="tag tag-soon">ASAP AFTER OMNICOM</span></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Approve 3D design</div></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Cast and assemble chain</div></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Admin</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk done"></div><div class="todo-text done">Sent tax docs to tax person — Apr 15 ✓</div></li>
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Follow up with tax person — confirm received + ETA</div><span class="tag tag-soon">APR 17–18</span></li>
+    </ul>
+  </div>
+  <div class="detail-section"><div class="ds-title">Acting & Growth</div>
+    <ul class="todo-list">
+      <li class="todo-item" onclick="chk(this)"><div class="chk"></div><div class="todo-text">Back into acting classes — when bandwidth opens</div></li>
+    </ul>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function show(id, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const v = document.getElementById('v-' + id);
+  if (v) v.classList.add('active');
+  if (el) { el.classList.add('active'); }
+  else {
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) n.classList.add('active');
+    });
+  }
+  document.querySelector('.main').scrollTop = 0;
+  if (window.innerWidth <= 768) {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+}
+
+function chk(item) {
+  const c = item.querySelector('.chk');
+  const t = item.querySelector('.todo-text');
+  c.classList.toggle('done');
+  t.classList.toggle('done');
+  saveState();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+
+function saveState() {
+  const items = document.querySelectorAll('.todo-item');
+  const state = {};
+  items.forEach((item, i) => { state[i] = item.querySelector('.chk').classList.contains('done'); });
+  try { localStorage.setItem('hq_state', JSON.stringify(state)); } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const state = JSON.parse(localStorage.getItem('hq_state') || '{}');
+    const items = document.querySelectorAll('.todo-item');
+    items.forEach((item, i) => {
+      if (state[i]) {
+        item.querySelector('.chk').classList.add('done');
+        item.querySelector('.todo-text').classList.add('done');
+      }
+    });
+  } catch(e) {}
+}
+
+function setDates() {
+  const now = new Date();
+  const d = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }).toUpperCase();
+  const el = document.getElementById('sideDate');
+  const ml = document.getElementById('mainDate');
+  if (el) el.textContent = d;
+  if (ml) ml.innerHTML = d + '<br><span style="font-size:8px;color:#444;font-family:var(--font-mono)">UPDATED APR 16</span>';
+}
+
+setDates();
+loadState();
+</script>
+</body>
+</html>
